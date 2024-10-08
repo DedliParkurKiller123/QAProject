@@ -1,0 +1,20 @@
+#spring.application.name=JwtSecurityProject
+
+spring:
+  application:
+    name: JwtSecurityProject
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/_myuser
+    password: FdgP7LdDq_Wa
+    username: postgres
+
+server:
+  error:
+    include-message: always
