@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { login } from '../../services/serviceAuth/authService';  
+import { login } from '../../services/serviceAuth/authService';
+import './Login.css'; // Додано для імпорту стилів
 
 const Login = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -34,7 +35,7 @@ const Login = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
                 <input 
@@ -51,7 +52,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)} 
                     required
                 />
-                {errors.auth && <p style={{ color: 'red' }}>{errors.auth}</p>}
+                {errors.auth && <p className="error">{errors.auth}</p>}
                 
                 <button type="submit">Login</button>
             </form>

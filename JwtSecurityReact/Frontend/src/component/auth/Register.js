@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { register } from '../../services/serviceAuth/authService';
+import './Register.css'; // Додано для імпорту стилів
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -41,53 +42,53 @@ const Register = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <h2>Register</h2>
             <form onSubmit={handleRegister}>
-                <div>
-                    <input 
-                        type="text" 
-                        placeholder="Name" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
-                    />
-                    {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
-                </div>
-                <div>
-                    <input 
-                        type="date" 
-                        value={dateOfBirth} 
-                        onChange={(e) => setDateOfBirth(e.target.value)} 
-                    />
-                    {errors.dateOfBirth && <p style={{ color: 'red' }}>{errors.dateOfBirth}</p>}
-                </div>
-                <div>
-                    <input 
-                        type="text" 
-                        placeholder="Phone Number" 
-                        value={phoneNumber} 
-                        onChange={(e) => setPhoneNumber(e.target.value)} 
-                    />
-                    {errors.phoneNumber && <p style={{ color: 'red' }}>{errors.phoneNumber}</p>}
-                </div>
-                <div>
-                    <input 
-                        type="email" 
-                        placeholder="Email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                    />
-                    {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-                </div>
-                <div>
-                    <input 
-                        type="password" 
-                        placeholder="Password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                    />
-                    {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-                </div>
+                <input 
+                    type="text" 
+                    placeholder="Name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)}
+                    required 
+                />
+                {errors.name && <p className="error">{errors.name}</p>}
+
+                <input 
+                    type="date" 
+                    value={dateOfBirth} 
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    required 
+                />
+                {errors.dateOfBirth && <p className="error">{errors.dateOfBirth}</p>}
+
+                <input 
+                    type="text" 
+                    placeholder="Phone Number" 
+                    value={phoneNumber} 
+                    onChange={(e) => setPhoneNumber(e.target.value)} 
+                    required
+                />
+                {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
+
+                <input 
+                    type="email" 
+                    placeholder="Email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)}
+                    required 
+                />
+                {errors.email && <p className="error">{errors.email}</p>}
+
+                <input 
+                    type="password" 
+                    placeholder="Password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)}
+                    required 
+                />
+                {errors.password && <p className="error">{errors.password}</p>}
+
                 <button type="submit">Register</button>
             </form>
         </div>
