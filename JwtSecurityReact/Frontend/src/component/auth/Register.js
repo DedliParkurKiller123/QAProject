@@ -7,7 +7,7 @@ const Register = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [message] = useState('');
+    const [errors, setErrors] = useState({}); 
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -20,12 +20,23 @@ const Register = () => {
                 password,
             };
 
-            const data = await register(registerData);
-            
+            const response = await register(registerData);
             alert('Registration successful');
-            localStorage.setItem('token', data.jwt);
+            localStorage.setItem('token', response.data.jwt);
+            setName('');
+            setDateOfBirth('');
+            setPhoneNumber('');
+            setEmail('');
+            setPassword('');
+            setErrors({}); 
         } catch (error) {
-            alert('Registration failed' + error.message);
+            const validationErrors = error.response.data.errors;
+            console.log(validationErrors);
+            if (error.response && error.response.status === 400) {
+                setErrors(validationErrors);
+            } else {
+                alert('Registration failed: ' + error.message);
+            }
         }
     };
 
@@ -33,43 +44,52 @@ const Register = () => {
         <div>
             <h2>Register</h2>
             <form onSubmit={handleRegister}>
-                <input 
-                    type="text" 
-                    placeholder="Name" 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
-                    required 
-                />
-                <input 
-                    type="date" 
-                    value={dateOfBirth} 
-                    onChange={(e) => setDateOfBirth(e.target.value)} 
-                    required 
-                />
-                <input 
-                    type="text" 
-                    placeholder="Phone Number" 
-                    value={phoneNumber} 
-                    onChange={(e) => setPhoneNumber(e.target.value)} 
-                    required 
-                />
-                <input 
-                    type="email" 
-                    placeholder="Email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    required 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                />
+                <div>
+                    <input 
+                        type="text" 
+                        placeholder="Name" 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)} 
+                    />
+                    {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
+                </div>
+                <div>
+                    <input 
+                        type="date" 
+                        value={dateOfBirth} 
+                        onChange={(e) => setDateOfBirth(e.target.value)} 
+                    />
+                    {errors.dateOfBirth && <p style={{ color: 'red' }}>{errors.dateOfBirth}</p>}
+                </div>
+                <div>
+                    <input 
+                        type="text" 
+                        placeholder="Phone Number" 
+                        value={phoneNumber} 
+                        onChange={(e) => setPhoneNumber(e.target.value)} 
+                    />
+                    {errors.phoneNumber && <p style={{ color: 'red' }}>{errors.phoneNumber}</p>}
+                </div>
+                <div>
+                    <input 
+                        type="email" 
+                        placeholder="Email" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                    />
+                    {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+                </div>
+                <div>
+                    <input 
+                        type="password" 
+                        placeholder="Password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                    />
+                    {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
+                </div>
                 <button type="submit">Register</button>
             </form>
-            {message && <p>{message}</p>}
         </div>
     );
 };

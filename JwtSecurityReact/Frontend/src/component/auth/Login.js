@@ -4,19 +4,32 @@ import { login } from '../../services/serviceAuth/authService';
 const Login = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
-    const [message] = useState('');
+    const [errors, setErrors] = useState({}); 
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await login({ phoneNumber, password });
+            const loginData = {
+                phoneNumber,
+                password,
+            };
+            const response = await login(loginData);
 
             localStorage.setItem('token', response.data.jwt);
             
             alert('Login successful!');
+            setPhoneNumber('');
+            setPassword('');
+            setErrors({}); 
 
         } catch (error) {
-            alert('Login failed: ' + (error.response?.data?.message || error.message));
+            const validationErrors = error.response.data.errors;
+            console.log(validationErrors);
+            if (error.response && error.response.status === 400) {
+                setErrors({ auth: validationErrors.auth });
+            } else {
+                alert('Login failed: ' + error.message);
+            }
         }
     };
 
@@ -38,9 +51,10 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)} 
                     required
                 />
+                {errors.auth && <p style={{ color: 'red' }}>{errors.auth}</p>}
+                
                 <button type="submit">Login</button>
             </form>
-            {message && <p>{message}</p>}
         </div>
     );
 };

@@ -1,5 +1,7 @@
 package org.sec.jwtsecurityproject.auth;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.sec.jwtsecurityproject.config.JwtService;
 import org.sec.jwtsecurityproject.user.model.User;
@@ -11,6 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Set;
+
+import static java.util.Set.of;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +27,10 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
+    public AuthenticationResponse register(RegisterRequest registerRequest) throws ConstraintViolationException {
+        if(userRepository.findByPhoneNumber(registerRequest.getPhoneNumber()).isPresent()){
+            throw new IllegalStateException("Phone has taken");
+        }
         var user = User.builder()
                 .name(registerRequest.getName())
                 .dateOfBirth(registerRequest.getDateOfBirth())

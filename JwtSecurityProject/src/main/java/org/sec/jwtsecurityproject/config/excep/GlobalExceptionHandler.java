@@ -5,28 +5,24 @@ import jakarta.validation.ConstraintViolationException;
 import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(PSQLException.class)
-    public ResponseEntity<Object> handlePSQLException(PSQLException ex) {
-        return new ResponseEntity<>(new CustomErrorResponse(ex.getServerErrorMessage().getDetail()),
-                HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<CustomErrorResponse> handleIllegalStateException(IllegalStateException ex) {
-        return new ResponseEntity<>(new CustomErrorResponse(ex.getMessage())
-                , HttpStatus.BAD_REQUEST);
+        Map<String, String> errorMessages = new HashMap<>();
+        errorMessages.put("phoneNumber", ex.getMessage());
+
+        return new ResponseEntity<>(new CustomErrorResponse(errorMessages), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -34,10 +30,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<CustomErrorResponse> handleConstraintViolationException(
             ConstraintViolationException e) {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        List<String> errorMessages = new ArrayList<>();
-        violations.stream().map(ConstraintViolation::getMessage).forEach(errorMessages::add);
-        return new ResponseEntity<>(new CustomErrorResponse(String.join(", ", errorMessages))
+        Map<String, String> errorMessages = violations.stream()
+                .collect(Collectors.toMap(
+                        violation -> violation.getPropertyPath().toString(),
+                        ConstraintViolation::getMessage
+                ));
+        return new ResponseEntity<>(new CustomErrorResponse(errorMessages)
                 , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<CustomErrorResponse> handleAuthenticationException(AuthenticationException ex){
+        Map<String, String> errorMessages = new HashMap<>();
+        errorMessages.put("auth", "Invalid phone number or password");
+
+        return new ResponseEntity<>(new CustomErrorResponse(errorMessages), HttpStatus.BAD_REQUEST);
     }
 
 }

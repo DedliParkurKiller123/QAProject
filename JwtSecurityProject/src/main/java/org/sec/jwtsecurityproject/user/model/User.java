@@ -2,23 +2,18 @@ package org.sec.jwtsecurityproject.user.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 import org.sec.jwtsecurityproject.config.customAnnotation.age.MinAge;
 import org.sec.jwtsecurityproject.user.role.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +43,6 @@ public class User implements UserDetails {
     private LocalDate dateOfBirth;
     @Size(min = 10,max = 10,message = "Phone number should be 10 character")
     @NotBlank(message = "Phone number can't be empty")
-    @Column(unique = true)
     private String phoneNumber;
     @Email(message = "Invalid email")
     @NotBlank(message = "Email can't be empty")
