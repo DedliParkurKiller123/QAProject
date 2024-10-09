@@ -43,14 +43,12 @@ const Login = () => {
                     placeholder="Phone Number" 
                     value={phoneNumber} 
                     onChange={(e) => setPhoneNumber(e.target.value)} 
-                    required
                 />
                 <input 
                     type="password" 
                     placeholder="Password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
-                    required
                 />
                 {errors.auth && <p className="error">{errors.auth}</p>}
                 

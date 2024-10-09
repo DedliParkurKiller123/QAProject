@@ -50,7 +50,6 @@ const Register = () => {
                     placeholder="Name" 
                     value={name} 
                     onChange={(e) => setName(e.target.value)}
-                    required 
                 />
                 {errors.name && <p className="error">{errors.name}</p>}
 
@@ -58,7 +57,6 @@ const Register = () => {
                     type="date" 
                     value={dateOfBirth} 
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    required 
                 />
                 {errors.dateOfBirth && <p className="error">{errors.dateOfBirth}</p>}
 
@@ -67,7 +65,6 @@ const Register = () => {
                     placeholder="Phone Number" 
                     value={phoneNumber} 
                     onChange={(e) => setPhoneNumber(e.target.value)} 
-                    required
                 />
                 {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
 
@@ -76,7 +73,6 @@ const Register = () => {
                     placeholder="Email" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    required 
                 />
                 {errors.email && <p className="error">{errors.email}</p>}
 
@@ -85,7 +81,6 @@ const Register = () => {
                     placeholder="Password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
-                    required 
                 />
                 {errors.password && <p className="error">{errors.password}</p>}
 
