@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { register } from '../../services/serviceAuth/authService';
-import './Register.css'; // Додано для імпорту стилів
+import './Register.css';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -8,7 +8,7 @@ const Register = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({}); 
+    const [errors, setErrors] = useState({});
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -22,21 +22,21 @@ const Register = () => {
             };
 
             const response = await register(registerData);
+
             alert('Registration successful');
-            localStorage.setItem('token', response.data.jwt);
+            localStorage.setItem('token', response.jwt);
             setName('');
             setDateOfBirth('');
             setPhoneNumber('');
             setEmail('');
             setPassword('');
-            setErrors({}); 
+            setErrors({});
         } catch (error) {
-            const validationErrors = error.response.data.errors;
-            console.log(validationErrors);
-            if (error.response && error.response.status === 400) {
-                setErrors(validationErrors);
+            if (error.errors) {
+                console.log(error.errors);
+                setErrors(error.errors); 
             } else {
-                alert('Registration failed: ' + error.message);
+                alert('Registration failed: ' + error.message); 
             }
         }
     };
@@ -69,7 +69,7 @@ const Register = () => {
                 {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
 
                 <input 
-                    type="email" 
+                    type="text" 
                     placeholder="Email" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}

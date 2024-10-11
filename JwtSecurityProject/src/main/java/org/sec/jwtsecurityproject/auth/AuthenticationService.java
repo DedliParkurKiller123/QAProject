@@ -1,7 +1,5 @@
 package org.sec.jwtsecurityproject.auth;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.sec.jwtsecurityproject.config.JwtService;
 import org.sec.jwtsecurityproject.user.model.User;
@@ -12,12 +10,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
-import java.util.Collections;
-import java.util.Set;
-
-import static java.util.Set.of;
-
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    public AuthenticationResponse register(RegisterRequest registerRequest) throws ConstraintViolationException {
+    public AuthenticationResponse register(RegisterRequest registerRequest){
         if(userRepository.findByPhoneNumber(registerRequest.getPhoneNumber()).isPresent()){
             throw new IllegalStateException("Phone has taken");
         }
@@ -58,4 +54,15 @@ public class AuthenticationService {
                 .build();
     }
 
+    public Map<String, String> hasValidationErrors(BindingResult bindingResult) {
+        Map<String, String> errors = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
+            System.out.println(errors);
+            return errors;
+        }
+        return errors;
+    }
 }

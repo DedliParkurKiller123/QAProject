@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { login } from '../../services/serviceAuth/authService';
-import './Login.css'; // Додано для імпорту стилів
+import './Login.css'; 
 
 const Login = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -16,7 +16,7 @@ const Login = () => {
             };
             const response = await login(loginData);
 
-            localStorage.setItem('token', response.data.jwt);
+            localStorage.setItem('token', response.jwt);
             
             alert('Login successful!');
             setPhoneNumber('');
@@ -24,12 +24,15 @@ const Login = () => {
             setErrors({}); 
 
         } catch (error) {
-            const validationErrors = error.response.data.errors;
-            console.log(validationErrors);
-            if (error.response && error.response.status === 400) {
-                setErrors({ auth: validationErrors.auth });
+            if (error.errors) {
+                console.log(error.errors.errors.auth); 
+                setErrors(prevErrors => ({
+                    ...prevErrors,
+                    ...error.errors,
+                    auth: error.errors.errors.auth 
+                }));
             } else {
-                alert('Login failed: ' + error.message);
+                alert('Registration failed: ' + error.message); 
             }
         }
     };
@@ -44,12 +47,15 @@ const Login = () => {
                     value={phoneNumber} 
                     onChange={(e) => setPhoneNumber(e.target.value)} 
                 />
+                {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
+
                 <input 
                     type="password" 
                     placeholder="Password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                 />
+                {errors.password && <p className="error">{errors.password}</p>}
                 {errors.auth && <p className="error">{errors.auth}</p>}
                 
                 <button type="submit">Login</button>

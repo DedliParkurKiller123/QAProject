@@ -2,7 +2,6 @@ package org.sec.jwtsecurityproject.config.excep;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -42,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<CustomErrorResponse> handleAuthenticationException(AuthenticationException ex){
         Map<String, String> errorMessages = new HashMap<>();
-        errorMessages.put("auth", "Invalid phone number or password");
+        errorMessages.put("auth", ex.getMessage());
 
         return new ResponseEntity<>(new CustomErrorResponse(errorMessages), HttpStatus.BAD_REQUEST);
     }
